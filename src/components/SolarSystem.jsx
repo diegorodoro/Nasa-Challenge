@@ -43,7 +43,6 @@ const SolarSystem = () => {
     scene.add(pointLight);
 
     const textureLoader = new THREE.TextureLoader();
-    const saturnRingTexture = textureLoader.load('/textures/saturn_ring.png');
 
     // Datos de los cuerpos celestes con información completa para las fichas
     const celestialBodies = [
@@ -93,8 +92,9 @@ const SolarSystem = () => {
       }
 
       if (data.name === 'Saturn') {
+        const saturnRing = textureLoader.load(saturnRingTexture);
         const ringGeometry = new THREE.RingGeometry(data.size + 1, data.size + 3, 64);
-        const ringMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true });
+        const ringMaterial = new THREE.MeshBasicMaterial({ map: saturnRing, side: THREE.DoubleSide, transparent: true });
         const ring = new THREE.Mesh(ringGeometry, ringMaterial);
         ring.rotation.x = Math.PI / 2;
         celestialBody.add(ring);
@@ -161,7 +161,7 @@ const SolarSystem = () => {
     });
 
     return () => {
-      window.removeEventListener('resize', () => {});
+      window.removeEventListener('resize', () => { });
       window.removeEventListener('click', onMouseClick);
       if (mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
