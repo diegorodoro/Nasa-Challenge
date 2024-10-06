@@ -227,6 +227,39 @@ const SolarSystem = () => {
       celestialBody.castShadow = true;
       celestialBody.receiveShadow = true;
 
+      // Clculos de Orbitas
+      const data2 = {"a": 0.38709927, "e": 0.20563593, "I": 7.00497902, "T": 0.2408467, "radius": 0.03}
+      const a = data2.a;
+      const e = data2.e;
+      const I = THREE.MathUtils.degToRad(data2.I); 
+
+      
+      const theta = [...Array(500).keys()].map((i) => (i / 500) * 2 * Math.PI); // 500 puntos a lo largo de la órbita
+
+      // Crear un array de vértices
+      const vertices = new Float32Array(500 * 3); // 500 puntos, cada uno con 3 coordenadas
+      console.log("XD");
+      theta.forEach((angle, index) => {
+        let r = a * (1 - Math.pow(e, 2)) / (1 + e * Math.cos(angle));
+        const x = r * Math.cos(angle);
+        const y = r * Math.sin(angle);
+        const z = Math.tan(data2.I) * y; // Inclinación de la órbita
+        
+        vertices[index * 3] = x * 100; // Multiplicamos por 100 para hacer las órbitas visibles
+        vertices[index * 3 + 1] = y * 100;
+        vertices[index * 3 + 2] = z * 100;
+      });
+
+      // Crear una geometría para la órbita
+      const orbitGeometry = new THREE.BufferGeometry();
+      orbitGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+      // Crear el material para la línea de la órbita
+      const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+      // Crear la línea y añadirla a la escena
+      const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
+      scene.add(orbitLine);
+
       const orbitGroup = new THREE.Group();
       orbitGroup.rotation.z = THREE.MathUtils.degToRad(data.inclination);
       orbitGroup.rotation.y = THREE.MathUtils.degToRad(data.ascendingNode);
