@@ -1,8 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PlanetCanvas from './PlanetCanvas';
 
 // Componente que muestra la ficha con la información del planeta seleccionado
 const PlanetInfo = ({ planet, onClose }) => {
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  // Hook to manage scroll behavior when the modal opens/closes
+  useEffect(() => {
+    // Disable body scrolling
+    document.body.style.overflow = 'hidden';
+
+    // Cleanup function to enable scrolling when the component unmounts
+    return () => {
+      document.body.style.overflow = 'auto'; // Re-enable scrolling
+    };
+  }, []);
+
+  const handleClose = () => {
+    if (!isButtonDisabled) {
+      setIsButtonDisabled(true);
+      onClose();
+
+      // Re-enable the button after a short delay
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 600); // Adjust the delay as needed (300ms here)
+    }
+  };
+
   return (
     <div style={infoContainerStyle}>
       {/* Contenedor del planeta */}
@@ -14,7 +39,7 @@ const PlanetInfo = ({ planet, onClose }) => {
       {/* Contenedor de la descripción del planeta */}
       <div style={descriptionContainerStyle}>
         <h2 style={titleStyle}>{planet.name}</h2>
-        <p>{planet.description}</p>
+        <h3 style={infoPlanetStyle}>{planet.description}</h3>
         <ul style={infoListStyle}>
           <li><strong>Diameter:</strong> {planet.diameter} km</li>
           <li><strong>Distance from Sun:</strong> {planet.distanceFromSun} km</li>
@@ -22,7 +47,13 @@ const PlanetInfo = ({ planet, onClose }) => {
           <li><strong>Orbital Period:</strong> {planet.orbitalPeriod} days</li>
           <li><strong>Moons:</strong> {planet.moons}</li>
         </ul>
-        <button style={closeButtonStyle} onClick={onClose}>Cerrar</button>
+        <button
+          style={closeButtonStyle}
+          onClick={handleClose}
+          disabled={isButtonDisabled} // Disable button when clicked
+        >
+          Cerrar
+        </button>
       </div>
     </div>
   );
@@ -45,6 +76,7 @@ const infoContainerStyle = {
   zIndex: 5,
   padding: '30px',
   overflowY: 'auto',
+  backdropFilter: 'blur(10px)', // Aplica un desenfoque de 10px al fondo
 };
 
 const planetContainerStyle = {
@@ -55,25 +87,34 @@ const planetContainerStyle = {
   padding: '30px',
 };
 
+const infoPlanetStyle = {
+  textAlign: 'justify',
+  fontSize: '20px',
+  margin: '0 0 40px 0',
+  justifyContent: 'center',
+};
+
 const descriptionContainerStyle = {
+  margin: '0',
   flex: 1.8,
-  padding: '30px',
+  padding: '20px',
   overflowY: 'auto',
   fontSize: '18px', // Tamaño de fuente mayor para mejor lectura
   lineHeight: '1.6',
 };
 
 const titleStyle = {
-  marginTop: 0,
-  fontSize: '38px', // Título más grande
-  color: '#ffd700', // Dorado para destacar el nombre del planeta
+  margin: 0,
+  fontSize: '108px', // Título más grande
+  color: '#white', // Dorado para destacar el nombre del planeta
   fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  textAlign: 'center',
 };
 
 const infoListStyle = {
   listStyleType: 'none',
   padding: 0,
-  margin: '20px 0',
+  margin: '0px',
   fontSize: '18px',
 };
 
