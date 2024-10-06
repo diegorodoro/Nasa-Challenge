@@ -60,6 +60,7 @@ const SolarSystem = () => {
         distance: 0,  // El Sol está en el centro
         texture: sunTexture,
         inclination: 0,
+        eccentricity: 0,
         ascendingNode: 0,
         orbitalSpeed: 0,
         rotationPeriod: 609,
@@ -74,7 +75,9 @@ const SolarSystem = () => {
         size: 4879 * sizeScale * 10,  // Tamaño real de Mercurio escalado
         distance: 57910000 * distanceScale,  // Distancia real de Mercurio al Sol escalada
         texture: mercuryTexture,
+        SMA: 0.38709927,
         inclination: 7.00497902,
+        eccentricity: 0.20563593,
         ascendingNode: 48.3,
         orbitalSpeed: 0.02,
         rotationPeriod: 1407.6,
@@ -89,7 +92,9 @@ const SolarSystem = () => {
         size: 12104 * sizeScale * 10,
         distance: 108200000 * distanceScale,
         texture: venusTexture,
+        SMA: 0.72333566,
         inclination: 3.39467605,
+        eccentricity: 0.00677672,
         ascendingNode: 76.7,
         orbitalSpeed: 0.015,
         rotationPeriod: 5832,
@@ -104,7 +109,9 @@ const SolarSystem = () => {
         size: 12742 * sizeScale * 10,
         distance: 149600000 * distanceScale,
         texture: earthTexture,
+        SMA: 1.00000261,
         inclination: 0,
+        eccentricity: 0.01671123,
         ascendingNode: 0,
         orbitalSpeed: 0.01,
         rotationPeriod: 24,
@@ -119,7 +126,9 @@ const SolarSystem = () => {
         size: 6779 * sizeScale * 10,
         distance: 227900000 * distanceScale,
         texture: marsTexture,
+        SMA: 1.52371034,
         inclination: 1.84969142,
+        eccentricity: 0.09339410,
         ascendingNode: 49.6,
         orbitalSpeed: 0.008,
         rotationPeriod: 24.6,
@@ -134,7 +143,9 @@ const SolarSystem = () => {
         size: 139820 * sizeScale * 10,
         distance: 778500000 * distanceScale,
         texture: jupiterTexture,
+        SMA: 5.20288700,
         inclination: 1.30439695,
+        eccentricity: 0.04838624,
         ascendingNode: 100.5,
         orbitalSpeed: 0.005,
         rotationPeriod: 9.9,
@@ -149,7 +160,9 @@ const SolarSystem = () => {
         size: 116460 * sizeScale * 10,
         distance: 1434000000 * distanceScale,
         texture: saturnTexture,
+        SMA: 9.53667594,
         inclination: 2.48599187,
+        eccentricity: 0.05386179,
         ascendingNode: 113.7,
         orbitalSpeed: 0.003,
         rotationPeriod: 10.7,
@@ -164,7 +177,9 @@ const SolarSystem = () => {
         size: 50724 * sizeScale * 10,
         distance: 2871000000 * distanceScale,
         texture: uranusTexture,
+        SMA: 19.18916464,
         inclination: 0.77263783,
+        eccentricity: 0.04725744,
         ascendingNode: 74,
         orbitalSpeed: 0.002,
         rotationPeriod: 17.2,
@@ -179,7 +194,9 @@ const SolarSystem = () => {
         size: 49244 * sizeScale * 10,
         distance: 4495000000 * distanceScale,
         texture: neptuneTexture,
+        SMA: 30.06992276,
         inclination: 1.77004347,
+        eccentricity: 0.00859048,
         ascendingNode: 131.8,
         orbitalSpeed: 0.0015,
         rotationPeriod: 16.1,
@@ -194,8 +211,10 @@ const SolarSystem = () => {
         size: 140 * sizeScale * 10,
         distance: 780000000 * distanceScale,
         texture: null,
+        SMA: 5.206645,
         color: 0xff0000,
         inclination: 22.0,
+        eccentricity: 0.14,
         ascendingNode: 120.0,
         orbitalSpeed: 0.0007,
         rotationPeriod: 0,
@@ -207,9 +226,7 @@ const SolarSystem = () => {
       }
     ];
 
-
-
-
+    
     const createdObjects = [];
     celestialBodies.forEach((data) => {
       let material;
@@ -228,22 +245,19 @@ const SolarSystem = () => {
       celestialBody.receiveShadow = true;
 
       // Clculos de Orbitas
-      const data2 = {"a": 0.38709927, "e": 0.20563593, "I": 7.00497902, "T": 0.2408467, "radius": 0.03}
-      const a = data2.a;
-      const e = data2.e;
-      const I = THREE.MathUtils.degToRad(data2.I); 
+      const a = data.SMA;
+      const e = data.eccentricity;
+      const I = THREE.MathUtils.degToRad(data.inclination); 
 
-      
       const theta = [...Array(500).keys()].map((i) => (i / 500) * 2 * Math.PI); // 500 puntos a lo largo de la órbita
 
       // Crear un array de vértices
       const vertices = new Float32Array(500 * 3); // 500 puntos, cada uno con 3 coordenadas
-      console.log("XD");
       theta.forEach((angle, index) => {
         let r = a * (1 - Math.pow(e, 2)) / (1 + e * Math.cos(angle));
         const x = r * Math.cos(angle);
         const y = r * Math.sin(angle);
-        const z = Math.tan(data2.I) * y; // Inclinación de la órbita
+        const z = Math.tan(I) * y; // Inclinación de la órbita
         
         vertices[index * 3] = x * 100; // Multiplicamos por 100 para hacer las órbitas visibles
         vertices[index * 3 + 1] = y * 100;
@@ -327,7 +341,6 @@ const SolarSystem = () => {
       requestAnimationFrame(animate);
       controls.update();
       const newLabels = [];
-
 
       createdObjects.forEach((object) => {
         const { distance, orbitalSpeed, rotationPeriod, name } = object.userData;
