@@ -50,10 +50,12 @@ const PlanetInfo = ({ planet, onClose }) => {
         <button
           style={closeButtonStyle}
           onClick={handleClose}
-          disabled={isButtonDisabled} // Disable button when clicked
+          onMouseDown={(e) => e.stopPropagation()} 
+          disabled={isButtonDisabled} 
         >
           Cerrar
         </button>
+
       </div>
     </div>
   );

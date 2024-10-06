@@ -23,8 +23,8 @@ const SolarSystem = () => {
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 5000); // FOV aumentado a 120
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
 
@@ -32,9 +32,24 @@ const SolarSystem = () => {
       mountRef.current.appendChild(renderer.domElement);
     }
 
+    // Control de la cámara
+    // const controls = new OrbitControls(camera, renderer.domElement);
+    // controls.enableDamping = true;
+    // controls.dampingFactor = 0.25;
+    // controls.enablePan = true; // Permitir arrastrar la cámara libremente
+    // controls.screenSpacePanning = true;
+
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    camera.position.set(0, 50, 200);
+    controls.enableDamping = true; 
+    controls.dampingFactor = 0.15; 
+    controls.rotateSpeed = 0.7; 
+    controls.zoomSpeed = 1.5; 
+    controls.panSpeed = 0.9; 
+    controls.screenSpacePanning = true; 
+
+    controls.minDistance = 11; // Mínimo acercamiento
+    controls.maxDistance = 14000; // Máximo alejamiento
+    camera.position.set(0, 1000, 2000);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
@@ -45,6 +60,23 @@ const SolarSystem = () => {
     scene.add(pointLight);
 
     const textureLoader = new THREE.TextureLoader();
+
+
+    // Crear el fondo de estrellas
+    const starGeometry = new THREE.BufferGeometry();
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+    const starVertices = [];
+    const starCount = 2500;  
+    for (let i = 0; i < starCount; i++) {
+      const x = THREE.MathUtils.randFloatSpread(10000); 
+      const y = THREE.MathUtils.randFloatSpread(10000);
+      const z = THREE.MathUtils.randFloatSpread(10000);
+      starVertices.push(x, y, z);
+    }
+
+    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+    const starField = new THREE.Points(starGeometry, starMaterial);
+    scene.add(starField);
 
 
     // Datos de los cuerpos celestes con información completa para las fichas
@@ -228,15 +260,12 @@ const SolarSystem = () => {
 
     
     const createdObjects = [];
-    celestialBodies.forEach((data) => {
-      let material;
-      if (data.texture) {
-        const texture = textureLoader.load(data.texture);
-        material = new THREE.MeshStandardMaterial({ map: texture });
-      } else {
-        material = new THREE.MeshStandardMaterial({ color: data.color }); // Asignar color rojo para el asteroide
-      }
+    const labelElements = [];
 
+    celestialBodies.forEach((data) => {
+      const material = data.texture
+        ? new THREE.MeshStandardMaterial({ map: textureLoader.load(data.texture) })
+        : new THREE.MeshStandardMaterial({ color: data.color || 0xff0000 });
       const geometry = new THREE.SphereGeometry(data.size, 32, 32);
       const celestialBody = new THREE.Mesh(geometry, material);
 
@@ -244,80 +273,46 @@ const SolarSystem = () => {
       celestialBody.castShadow = true;
       celestialBody.receiveShadow = true;
 
-      // Clculos de Orbitas
-      const a = data.SMA;
-      const e = data.eccentricity;
-      const I = THREE.MathUtils.degToRad(data.inclination); 
-
-      const theta = [...Array(500).keys()].map((i) => (i / 500) * 2 * Math.PI); // 500 puntos a lo largo de la órbita
-
-      // Crear un array de vértices
-      const vertices = new Float32Array(500 * 3); // 500 puntos, cada uno con 3 coordenadas
-      theta.forEach((angle, index) => {
-        let r = a * (1 - Math.pow(e, 2)) / (1 + e * Math.cos(angle));
-        const x = r * Math.cos(angle);
-        const y = r * Math.sin(angle);
-        const z = Math.tan(I) * y; // Inclinación de la órbita
-        
-        vertices[index * 3] = x * 100; // Multiplicamos por 100 para hacer las órbitas visibles
-        vertices[index * 3 + 1] = y * 100;
-        vertices[index * 3 + 2] = z * 100;
-      });
-
-      // Crear una geometría para la órbita
-      const orbitGeometry = new THREE.BufferGeometry();
-      orbitGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
-      // Crear el material para la línea de la órbita
-      const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
-      // Crear la línea y añadirla a la escena
-      const orbitLine = new THREE.Line(orbitGeometry, orbitMaterial);
-      scene.add(orbitLine);
-
       const orbitGroup = new THREE.Group();
-      orbitGroup.rotation.z = THREE.MathUtils.degToRad(data.inclination);
-      orbitGroup.rotation.y = THREE.MathUtils.degToRad(data.ascendingNode);
+      orbitGroup.rotation.z = THREE.MathUtils.degToRad(data.inclination || 0);
+      orbitGroup.rotation.y = THREE.MathUtils.degToRad(data.ascendingNode || 0);
       orbitGroup.add(celestialBody);
+      scene.add(orbitGroup);
+
+      // Crear órbitas usando ecuación polar (igual que antes)
+      if (data.name !== 'Sun') {
+        const orbitPoints = new THREE.BufferGeometry();
+        const points = [];
+        for (let theta = 0; theta <= 2 * Math.PI; theta += 0.01) {
+          const r = (data.SMA * (1 - Math.pow(data.eccentricity, 2))) / (1 + data.eccentricity * Math.cos(theta));
+          const x = r * Math.cos(theta);
+          const z = r * Math.sin(theta);
+          points.push(new THREE.Vector3(x * 100, 0, z * 100));
+        }
+        orbitPoints.setFromPoints(points);
+        const orbitLine = new THREE.Line(
+          orbitPoints,
+          new THREE.LineBasicMaterial({ color: 0xffffff })
+        );
+        orbitGroup.add(orbitLine);
+      }
 
       celestialBody.userData = { ...data, orbitGroup };
       createdObjects.push(celestialBody);
 
-      if (data.name !== 'Sun') {
-        const orbitGeometry = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 64);
-        const orbitMaterial = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, side: THREE.DoubleSide, opacity: 0.6, transparent: true });
-        const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
-        orbit.rotation.x = Math.PI / 2;
-        orbitGroup.add(orbit);
-      }
-
-      if (data.name === 'Saturn') {
-        const saturnRing = textureLoader.load(saturnRingTexture);
-        const ringGeometry = new THREE.RingGeometry(data.size + 1, data.size + 3, 64);
-        const ringMaterial = new THREE.MeshBasicMaterial({ map: saturnRing, side: THREE.DoubleSide, transparent: true });
-        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-        ring.rotation.x = Math.PI / 2;
-        celestialBody.add(ring);
-      }
-
-      scene.add(orbitGroup);
+      // Crear y posicionar la etiqueta
+      const label = document.createElement('div');
+      label.style.position = 'absolute';
+      label.style.color = 'white';
+      label.style.fontSize = '12px';
+      label.style.fontWeight = 'bold';
+      label.textContent = data.name;
+      label.style.pointerEvents = 'none';
+      labelElements.push(label);
+      document.body.appendChild(label);
     });
 
-    setObjects(createdObjects);
-
-    const starGeometry = new THREE.BufferGeometry();
-    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
-
-    const starVertices = [];
-    for (let i = 0; i < 10000; i++) {
-      const x = THREE.MathUtils.randFloatSpread(1000);
-      const y = THREE.MathUtils.randFloatSpread(1000);
-      const z = THREE.MathUtils.randFloatSpread(1000);
-      starVertices.push(x, y, z);
-    }
-
-    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-    const starField = new THREE.Points(starGeometry, starMaterial);
-    // scene.add(starField);
+    setLabels(labelElements);
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
@@ -328,7 +323,6 @@ const SolarSystem = () => {
 
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(createdObjects);
-
       if (intersects.length > 0) {
         const celestialBody = intersects[0].object.userData;
         setSelectedObject(celestialBody);
@@ -337,27 +331,42 @@ const SolarSystem = () => {
 
     window.addEventListener('click', onMouseClick);
 
+    const startTime = Date.now();
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
-      const newLabels = [];
+      const elapsedTime = (Date.now() - startTime) * 0.001;
 
-      createdObjects.forEach((object) => {
-        const { distance, orbitalSpeed, rotationPeriod, name } = object.userData;
-        object.position.x = distance * Math.cos(orbitalSpeed * Date.now() * 0.0001);
-        object.position.z = distance * Math.sin(orbitalSpeed * Date.now() * 0.0001);
-        object.rotation.y += rotationPeriod ? (1 / rotationPeriod) * 0.1 : 0.001;
+      // Ajuste dinámico de la velocidad de controles
+      const distanceToCenter = camera.position.length();
+      controls.rotateSpeed = distanceToCenter < 200 ? 0.2 : 0.7;
+      controls.zoomSpeed = distanceToCenter < 200 ? 0.6 : 1.5;
 
+      createdObjects.forEach((object, index) => {
+        const { SMA, eccentricity, orbitalPeriod, rotationPeriod } = object.userData;
+        if (object.userData.name !== 'Sun') {
+          const angle = (2 * Math.PI * elapsedTime) / orbitalPeriod;
+          const r = (SMA * (1 - Math.pow(eccentricity, 2))) / (1 + eccentricity * Math.cos(angle));
+          object.position.x = r * Math.cos(angle) * 100;
+          object.position.z = r * Math.sin(angle) * 100;
+        }
+
+        // Rotación sobre su eje
+        object.rotation.y += rotationPeriod ? (1 / rotationPeriod) * 0.01 : 0.001;
+
+        // Proyectar la posición para etiquetas
         const vector = new THREE.Vector3();
         object.getWorldPosition(vector);
         vector.project(camera);
 
-        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
-        const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+        const screenX = (vector.x * 0.5 + 0.5) * window.innerWidth;
+        const screenY = (vector.y * -0.5 + 0.5) * window.innerHeight;
 
-        newLabels.push({ name, x, y });
+        if (labelElements[index]) {
+          labelElements[index].style.left = `${screenX}px`;
+          labelElements[index].style.top = `${screenY}px`;
+        }
       });
-      setLabels(newLabels);
 
       renderer.render(scene, camera);
     };
@@ -371,8 +380,16 @@ const SolarSystem = () => {
     });
 
     return () => {
-      window.removeEventListener('resize', () => { });
+      window.removeEventListener('resize', () => {});
       window.removeEventListener('click', onMouseClick);
+      renderer.dispose();
+
+      labelElements.forEach((label) => {
+        if (label && label.parentNode) {
+          label.parentNode.removeChild(label);
+        }
+      });
+
       if (mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }
@@ -382,23 +399,6 @@ const SolarSystem = () => {
   return (
     <>
       <div ref={mountRef} style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, zIndex: 1 }} />
-      {labels.map((label, index) => (
-        <div
-          key={index}
-          style={{
-            position: 'absolute',
-            left: `${label.x}px`,
-            top: `${label.y}px`,
-            color: 'white',
-            pointerEvents: 'none',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            zIndex: 1
-          }}
-        >
-          {label.name}
-        </div>
-      ))}
       {selectedObject && (
         <PlanetInfo planet={selectedObject} onClose={() => setSelectedObject(null)} />
       )}
