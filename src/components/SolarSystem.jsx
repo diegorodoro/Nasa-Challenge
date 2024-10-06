@@ -18,10 +18,12 @@ const SolarSystem = () => {
   const mountRef = useRef(null);
   const [selectedObject, setSelectedObject] = useState(null);
   const [objects, setObjects] = useState([]);
+  const [labels, setLabels] = useState([]);
+
 
   useEffect(() => {
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 5000); // FOV aumentado a 120
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
@@ -69,7 +71,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Mercury',
-        size: 4879 * sizeScale*10,  // Tamaño real de Mercurio escalado
+        size: 4879 * sizeScale * 10,  // Tamaño real de Mercurio escalado
         distance: 57910000 * distanceScale,  // Distancia real de Mercurio al Sol escalada
         texture: mercuryTexture,
         inclination: 7.00497902,
@@ -84,7 +86,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Venus',
-        size: 12104 * sizeScale*10,
+        size: 12104 * sizeScale * 10,
         distance: 108200000 * distanceScale,
         texture: venusTexture,
         inclination: 3.39467605,
@@ -99,7 +101,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Earth',
-        size: 12742 * sizeScale*10,
+        size: 12742 * sizeScale * 10,
         distance: 149600000 * distanceScale,
         texture: earthTexture,
         inclination: 0,
@@ -114,7 +116,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Mars',
-        size: 6779 * sizeScale*10,
+        size: 6779 * sizeScale * 10,
         distance: 227900000 * distanceScale,
         texture: marsTexture,
         inclination: 1.84969142,
@@ -129,7 +131,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Jupiter',
-        size: 139820 * sizeScale*10,
+        size: 139820 * sizeScale * 10,
         distance: 778500000 * distanceScale,
         texture: jupiterTexture,
         inclination: 1.30439695,
@@ -144,7 +146,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Saturn',
-        size: 116460 * sizeScale*10,
+        size: 116460 * sizeScale * 10,
         distance: 1434000000 * distanceScale,
         texture: saturnTexture,
         inclination: 2.48599187,
@@ -159,7 +161,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Uranus',
-        size: 50724 * sizeScale*10,
+        size: 50724 * sizeScale * 10,
         distance: 2871000000 * distanceScale,
         texture: uranusTexture,
         inclination: 0.77263783,
@@ -174,7 +176,7 @@ const SolarSystem = () => {
       },
       {
         name: 'Neptune',
-        size: 49244 * sizeScale*10,
+        size: 49244 * sizeScale * 10,
         distance: 4495000000 * distanceScale,
         texture: neptuneTexture,
         inclination: 1.77004347,
@@ -189,7 +191,7 @@ const SolarSystem = () => {
       },
       {
         name: '617 Patroclus',
-        size: 140 * sizeScale*10,
+        size: 140 * sizeScale * 10,
         distance: 780000000 * distanceScale,
         texture: null,
         color: 0xff0000,
@@ -291,13 +293,25 @@ const SolarSystem = () => {
     const animate = () => {
       requestAnimationFrame(animate);
       controls.update();
+      const newLabels = [];
+
 
       createdObjects.forEach((object) => {
-        const { distance, orbitalSpeed, rotationPeriod } = object.userData;
+        const { distance, orbitalSpeed, rotationPeriod, name } = object.userData;
         object.position.x = distance * Math.cos(orbitalSpeed * Date.now() * 0.0001);
         object.position.z = distance * Math.sin(orbitalSpeed * Date.now() * 0.0001);
         object.rotation.y += rotationPeriod ? (1 / rotationPeriod) * 0.1 : 0.001;
+
+        const vector = new THREE.Vector3();
+        object.getWorldPosition(vector);
+        vector.project(camera);
+
+        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+        const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+
+        newLabels.push({ name, x, y });
       });
+      setLabels(newLabels);
 
       renderer.render(scene, camera);
     };
@@ -322,6 +336,23 @@ const SolarSystem = () => {
   return (
     <>
       <div ref={mountRef} style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, zIndex: 1 }} />
+      {labels.map((label, index) => (
+        <div
+          key={index}
+          style={{
+            position: 'absolute',
+            left: `${label.x}px`,
+            top: `${label.y}px`,
+            color: 'white',
+            pointerEvents: 'none',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            zIndex: 1
+          }}
+        >
+          {label.name}
+        </div>
+      ))}
       {selectedObject && (
         <PlanetInfo planet={selectedObject} onClose={() => setSelectedObject(null)} />
       )}
