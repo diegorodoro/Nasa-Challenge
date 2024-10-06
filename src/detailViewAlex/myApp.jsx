@@ -1,17 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Canvas, useLoader, useFrame } from '@react-three/fiber';
-import { OrbitControls, Sphere } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei';
 import { TextureLoader } from 'three';
 import { Flex, Text } from "@radix-ui/themes";
 import background from "../assets/images/background.jpg";
-import { useGLTF } from '@react-three/drei' // Importa la textura
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { motion } from 'framer-motion';
+import { useSpring, a } from '@react-spring/three'; // Importar useSpring y a (animated)
 import planets from '../data/detailDirectory';
 import Footer from './components/footer';
 import Header from './components/header';
+import { CaretRightIcon } from "@radix-ui/react-icons";
 
-function Planet({ planet }) {
+function Planet({ planet, planetPosition }) {
     const texture = useLoader(TextureLoader, planet.mesh);
     const planetRef = useRef();
     const [gltf, setGltf] = useState(null); // Estado para almacenar el modelo GLB
@@ -29,39 +30,51 @@ function Planet({ planet }) {
         if (planet.name === "Saturn") {
             loader.load(
                 '../assets/images/Saturn_GLB.glb', // Asegúrate de que la ruta sea correcta
-                (gltf) => {
-                    setGltf(gltf); // Almacena el modelo en el estado
-                },
+                (gltf) => setGltf(gltf),
                 undefined,
-                (error) => {
-                    console.error('Error cargando el modelo:', error);
-                }
+                (error) => console.error('Error cargando el modelo:', error)
             );
         }
     }, [planet.name]);
 
+    // Utilizar spring para animar la posición del planeta
+    const { position } = useSpring({ position: planetPosition, config: { mass: 1, tension: 150, friction: 50 } });
+
     return (
-        <>
+        <a.mesh ref={planetRef} position={position}> {/* a.mesh en lugar de mesh */}
             {planet.name === "Saturn" && gltf ? (
-                <primitive object={gltf.scene} position={[0, 0, 0]} rotation={[0, 0, 0]} />
+                <primitive object={gltf.scene} />
             ) : (
-                <mesh ref={planetRef}>
+                <>
                     <sphereGeometry args={[3, 32, 32]} />
                     <meshStandardMaterial map={texture} />
-                </mesh>
+                </>
             )}
-        </>
+        </a.mesh>
     );
 }
 
 export default function MyApp() {
     const [isLoading, setIsLoading] = useState(true);
-    const mars = planets.find(p => p.name === "Saturn");
+    const [currentPlanetIndex, setCurrentPlanetIndex] = useState(0);
+    const currentPlanet = planets[currentPlanetIndex];
+    const [planetPosition, setPlanetPosition] = useState([0, 0, 0]);
+
+    const nextPlanet = () => {
+        // Desplaza el planeta hacia la derecha
+        setPlanetPosition([-25, 0, -10]);
+
+        setTimeout(() => {
+            // Cambia el planeta después del desplazamiento
+            setCurrentPlanetIndex((currentPlanetIndex + 1) % planets.length);
+            // Restablece la posición para el nuevo planeta
+            setPlanetPosition([0, 0, 0]);
+        }, 1000);
+    };
 
     // Simular la carga del planeta
     useEffect(() => {
         const loadPlanet = async () => {
-            // Simula un retraso de carga (ajusta según sea necesario)
             await new Promise(resolve => setTimeout(resolve, 2000));
             setIsLoading(false);
         };
@@ -71,80 +84,74 @@ export default function MyApp() {
 
     return (
         <div
-            className="bg-cover bg-center h-screen flex flex-col" // Establece flex-col para que el footer esté al final
-            style={{ backgroundImage: `url(${background})` }} // Establece la imagen de fondo aquí
+            className="bg-cover bg-center h-screen flex flex-col"
+            style={{ backgroundImage: `url(${background})` }}
         >
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 2.5 }}  // Ajusta la duración del fade in
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2.5 }}>
                 <Header />
             </motion.div>
 
-            <Flex className="flex-1 overflow-hidden"> {/* Evitar el desbordamiento */}
-                {/* Contenedor de movimiento para el Canvas */}
+            <Flex className="flex-1 overflow-hidden">
                 <motion.div
-                    // Ajusta la posición del Canvas
-                    initial={{ opacity: 0, x: '-100%' }} // Empieza fuera de la vista
-                    animate={!isLoading ? { opacity: 1, x: 0 } : {}} // Solo animar si no está cargando
+                    initial={{ opacity: 0, x: '-100%' }}
+                    animate={!isLoading ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 1.2 }}
                 >
                     <Canvas style={{ width: '65vw', height: '100%', maxWidth: "60vw", overflow: "hidden" }}>
-                        <OrbitControls enableZoom={true} minDistance={5} maxDistance={6} />
+                        <OrbitControls enableZoom={true} enablePan={false} minDistance={5} maxDistance={6} />
                         <ambientLight intensity={1} />
                         <pointLight position={[5, 5, 5]} intensity={1.5} />
-                        {!isLoading && <Planet planet={mars} />}
+                        <Planet planet={currentPlanet} planetPosition={planetPosition} />
                     </Canvas>
                 </motion.div>
 
-                <div className="w-[30%] flex flex-col p-4 overflow-hidden justify-center "> {/* Asegura disposición en columna */}
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 2.5 }}  // Ajusta la duración del fade in
-                    >
-                        <Text className="font-sans font-bold text-white text-7xl">{mars.name}</Text>
-                    </motion.div>
+                <div className="w-[100%] flex flex-row overflow-hidden justify-center">
+                    <div className="flex flex-col justify-center w-[100%]">
+                        <motion.div
+                            key={`${currentPlanet.name}-name`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 2.7 }}
+                        >
+                            <Text className="font-sans font-bold text-white text-7xl">{currentPlanet.name}</Text>
+                        </motion.div>
+                        <motion.div
+                            key={`${currentPlanet.name}-description`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, delay: 0.5 }}
+                            className='mt-4'
+                        >
+                            <Text className="font-sans text-white text-2xl">
+                                {currentPlanet.description}
+                            </Text>
+                        </motion.div>
+                        <motion.div
+                            key={`${currentPlanet.name}-info`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, delay: 1 }}
+                            className='mt-4'
+                        >
+                            <Text className="font-sans text-white text-xl">
+                                <ul className="list-disc pl-6">
+                                    <li><span className="font-bold">Diameter:</span> {currentPlanet.diameter}</li>
+                                    <li><span className="font-bold">Distance from Sun:</span> {currentPlanet.distanceFromSun}</li>
+                                    <li><span className="font-bold">Moons:</span> {currentPlanet.moons}</li>
+                                </ul>
+                            </Text>
+                        </motion.div>
+                    </div>
 
-                    <motion.div // Segundo div de movimiento para el texto
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 0.5 }}
-                        className='mt-4' // Retraso para el texto
-                    >
-                        <Text className="font-sans text-white text-2xl">
-                            {mars.description}
-                        </Text>
-                    </motion.div>
-
-                    <motion.div // Tercer div de movimiento para la información
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 1 }}
-                        className='mt-4' // Retraso para la información
-                    >
-                        <Text className="font-sans text-white text-xl">
-                            <ul className="list-disc pl-6"> {/* Estilo para la lista desordenada */}
-                                <li>
-                                    <span className="font-bold">Diameter:</span> {mars.diameter}
-                                </li>
-                                <li>
-                                    <span className="font-bold">Distance from Sun:</span> {mars.distanceFromSun}
-                                </li>
-                                <li>
-                                    <span className="font-bold">Moons:</span> {mars.moons}
-                                </li>
-                            </ul>
-                        </Text>
-                    </motion.div>
+                    <div className="flex flex-col justify-center pr-6">
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2.7 }}>
+                            <CaretRightIcon className="h-12 w-12 ml-4 text-white hover:cursor-pointer hover:scale-150" onClick={nextPlanet} />
+                        </motion.div>
+                    </div>
                 </div>
             </Flex>
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 2.5 }}  // Ajusta la duración del fade in
-            >
+
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2.5 }}>
                 <Footer />
             </motion.div>
         </div>
