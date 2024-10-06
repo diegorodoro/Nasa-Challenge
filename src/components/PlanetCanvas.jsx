@@ -17,7 +17,7 @@ const PlanetCanvas = ({ planetTexture, size }) => {
     // Crear la geometría y la textura del planeta con tamaño ajustable
     const geometry = new THREE.SphereGeometry(size, 32, 32); // Ajustar el tamaño del planeta
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load(`/textures/${planetTexture}`);
+    const texture = textureLoader.load(planetTexture);
     const material = new THREE.MeshStandardMaterial({ map: texture });
     const planet = new THREE.Mesh(geometry, material);
     scene.add(planet);

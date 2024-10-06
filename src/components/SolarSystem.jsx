@@ -3,6 +3,17 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import PlanetInfo from './PlanetInfo';
 
+import sunTexture from '../assets/textures/sun.png';
+import mercuryTexture from '../assets/textures/mercury.webp';
+import venusTexture from '../assets/textures/venus.webp';
+import earthTexture from '../assets/textures/earth.jpg';
+import marsTexture from '../assets/textures/mars.webp';
+import jupiterTexture from '../assets/textures/jupiter.jpg';
+import saturnTexture from '../assets/textures/saturn.jpg';
+import saturnRingTexture from '../assets/textures/saturn-ring.png';
+import uranusTexture from '../assets/textures/uranus.webp';
+import neptuneTexture from '../assets/textures/neptune.jpg';
+
 const SolarSystem = () => {
   const mountRef = useRef(null);
   const [selectedObject, setSelectedObject] = useState(null);
@@ -36,15 +47,15 @@ const SolarSystem = () => {
 
     // Datos de los cuerpos celestes con información completa para las fichas
     const celestialBodies = [
-      { name: 'Sun', size: 10, distance: 0, texture: 'sun.jpg', inclination: 0, ascendingNode: 0, orbitalSpeed: 0, rotationPeriod: 609, diameter: 1392000, distanceFromSun: 0, orbitalPeriod: 'N/A', moons: 0, description: 'The Sun is the star at the center of the Solar System.' },
-      { name: 'Mercury', size: 0.5, distance: 15, texture: 'mercury.jpg', inclination: 7.00497902, ascendingNode: 48.3, orbitalSpeed: 0.02, rotationPeriod: 1407.6, diameter: 4879, distanceFromSun: 57910000, orbitalPeriod: 88, moons: 0, description: 'Mercury is the smallest planet in the Solar System.' },
-      { name: 'Venus', size: 0.85, distance: 25, texture: 'venus.jpg', inclination: 3.39467605, ascendingNode: 76.7, orbitalSpeed: 0.015, rotationPeriod: 5832, diameter: 12104, distanceFromSun: 108200000, orbitalPeriod: 225, moons: 0, description: 'Venus is the second planet from the Sun.' },
-      { name: 'Earth', size: 1.0, distance: 35, texture: 'earth.jpg', inclination: 0, ascendingNode: 0, orbitalSpeed: 0.01, rotationPeriod: 24, diameter: 12742, distanceFromSun: 149600000, orbitalPeriod: 365.25, moons: 1, description: 'Earth is the third planet from the Sun.' },
-      { name: 'Mars', size: 0.65, distance: 45, texture: 'mars.jpg', inclination: 1.84969142, ascendingNode: 49.6, orbitalSpeed: 0.008, rotationPeriod: 24.6, diameter: 6779, distanceFromSun: 227900000, orbitalPeriod: 687, moons: 2, description: 'Mars is the fourth planet from the Sun.' },
-      { name: 'Jupiter', size: 2.0, distance: 65, texture: 'jupiter.jpg', inclination: 1.30439695, ascendingNode: 100.5, orbitalSpeed: 0.005, rotationPeriod: 9.9, diameter: 139820, distanceFromSun: 778500000, orbitalPeriod: 4333, moons: 79, description: 'Jupiter is the largest planet in the Solar System.' },
-      { name: 'Saturn', size: 1.7, distance: 85, texture: 'saturn.jpg', inclination: 2.48599187, ascendingNode: 113.7, orbitalSpeed: 0.003, rotationPeriod: 10.7, diameter: 116460, distanceFromSun: 1434000000, orbitalPeriod: 10759, moons: 62, description: 'Saturn is famous for its ring system.' },
-      { name: 'Uranus', size: 1.5, distance: 105, texture: 'uranus.jpg', inclination: 0.77263783, ascendingNode: 74, orbitalSpeed: 0.002, rotationPeriod: 17.2, diameter: 50724, distanceFromSun: 2871000000, orbitalPeriod: 30688, moons: 27, description: 'Uranus is the seventh planet from the Sun.' },
-      { name: 'Neptune', size: 1.3, distance: 125, texture: 'neptune.jpg', inclination: 1.77004347, ascendingNode: 131.8, orbitalSpeed: 0.0015, rotationPeriod: 16.1, diameter: 49244, distanceFromSun: 4495000000, orbitalPeriod: 60182, moons: 14, description: 'Neptune is the eighth planet from the Sun.' },
+      { name: 'Sun', size: 10, distance: 0, texture: sunTexture, inclination: 0, ascendingNode: 0, orbitalSpeed: 0, rotationPeriod: 609, diameter: 1392000, distanceFromSun: 0, orbitalPeriod: 'N/A', moons: 0, description: 'The Sun is the star at the center of the Solar System.' },
+      { name: 'Mercury', size: 0.5, distance: 15, texture: mercuryTexture, inclination: 7.00497902, ascendingNode: 48.3, orbitalSpeed: 0.02, rotationPeriod: 1407.6, diameter: 4879, distanceFromSun: 57910000, orbitalPeriod: 88, moons: 0, description: 'Mercury is the smallest planet in the Solar System.' },
+      { name: 'Venus', size: 0.85, distance: 25, texture: venusTexture, inclination: 3.39467605, ascendingNode: 76.7, orbitalSpeed: 0.015, rotationPeriod: 5832, diameter: 12104, distanceFromSun: 108200000, orbitalPeriod: 225, moons: 0, description: 'Venus is the second planet from the Sun.' },
+      { name: 'Earth', size: 1.0, distance: 35, texture: earthTexture, inclination: 0, ascendingNode: 0, orbitalSpeed: 0.01, rotationPeriod: 24, diameter: 12742, distanceFromSun: 149600000, orbitalPeriod: 365.25, moons: 1, description: 'Earth is the third planet from the Sun.' },
+      { name: 'Mars', size: 0.65, distance: 45, texture: marsTexture, inclination: 1.84969142, ascendingNode: 49.6, orbitalSpeed: 0.008, rotationPeriod: 24.6, diameter: 6779, distanceFromSun: 227900000, orbitalPeriod: 687, moons: 2, description: 'Mars is the fourth planet from the Sun.' },
+      { name: 'Jupiter', size: 2.0, distance: 65, texture: jupiterTexture, inclination: 1.30439695, ascendingNode: 100.5, orbitalSpeed: 0.005, rotationPeriod: 9.9, diameter: 139820, distanceFromSun: 778500000, orbitalPeriod: 4333, moons: 79, description: 'Jupiter is the largest planet in the Solar System.' },
+      { name: 'Saturn', size: 1.7, distance: 85, texture: saturnTexture, inclination: 2.48599187, ascendingNode: 113.7, orbitalSpeed: 0.003, rotationPeriod: 10.7, diameter: 116460, distanceFromSun: 1434000000, orbitalPeriod: 10759, moons: 62, description: 'Saturn is famous for its ring system.' },
+      { name: 'Uranus', size: 1.5, distance: 105, texture: uranusTexture, inclination: 0.77263783, ascendingNode: 74, orbitalSpeed: 0.002, rotationPeriod: 17.2, diameter: 50724, distanceFromSun: 2871000000, orbitalPeriod: 30688, moons: 27, description: 'Uranus is the seventh planet from the Sun.' },
+      { name: 'Neptune', size: 1.3, distance: 125, texture: neptuneTexture, inclination: 1.77004347, ascendingNode: 131.8, orbitalSpeed: 0.0015, rotationPeriod: 16.1, diameter: 49244, distanceFromSun: 4495000000, orbitalPeriod: 60182, moons: 14, description: 'Neptune is the eighth planet from the Sun.' },
       { name: '617 Patroclus', size: 0.3, distance: 140, texture: null, color: 0xff0000, inclination: 22.0, ascendingNode: 120.0, orbitalSpeed: 0.0007, rotationPeriod: 0, diameter: 140, distanceFromSun: 780000000, orbitalPeriod: 4300, moons: 0, description: '617 Patroclus is a binary Jupiter trojan asteroid.' }
     ];
 
@@ -52,7 +63,7 @@ const SolarSystem = () => {
     celestialBodies.forEach((data) => {
       let material;
       if (data.texture) {
-        const texture = textureLoader.load(`/textures/${data.texture}`);
+        const texture = textureLoader.load(data.texture);
         material = new THREE.MeshStandardMaterial({ map: texture });
       } else {
         material = new THREE.MeshStandardMaterial({ color: data.color }); // Asignar color rojo para el asteroide
