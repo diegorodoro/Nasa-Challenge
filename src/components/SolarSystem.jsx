@@ -44,19 +44,169 @@ const SolarSystem = () => {
 
     const textureLoader = new THREE.TextureLoader();
 
+
     // Datos de los cuerpos celestes con información completa para las fichas
+    // Escalas
+    const sizeScale = 10 / 1392000;  // Escala de tamaño para que el Sol tenga un tamaño de 10 unidades
+    const distanceScale = 1 / 1000000;  // Escala de distancia para que 1 unidad represente 1 millón de kilómetros
+
+    // Cuerpos celestes con tamaños y distancias reales, luego escalados
     const celestialBodies = [
-      { name: 'Sun', size: 10, distance: 0, texture: sunTexture, inclination: 0, ascendingNode: 0, orbitalSpeed: 0, rotationPeriod: 609, diameter: 1392000, distanceFromSun: 0, orbitalPeriod: 'N/A', moons: 0, description: 'The Sun is the star at the center of the Solar System.' },
-      { name: 'Mercury', size: 0.5, distance: 15, texture: mercuryTexture, inclination: 7.00497902, ascendingNode: 48.3, orbitalSpeed: 0.02, rotationPeriod: 1407.6, diameter: 4879, distanceFromSun: 57910000, orbitalPeriod: 88, moons: 0, description: 'Mercury is the smallest planet in the Solar System.' },
-      { name: 'Venus', size: 0.85, distance: 25, texture: venusTexture, inclination: 3.39467605, ascendingNode: 76.7, orbitalSpeed: 0.015, rotationPeriod: 5832, diameter: 12104, distanceFromSun: 108200000, orbitalPeriod: 225, moons: 0, description: 'Venus is the second planet from the Sun.' },
-      { name: 'Earth', size: 1.0, distance: 35, texture: earthTexture, inclination: 0, ascendingNode: 0, orbitalSpeed: 0.01, rotationPeriod: 24, diameter: 12742, distanceFromSun: 149600000, orbitalPeriod: 365.25, moons: 1, description: 'Earth is the third planet from the Sun.' },
-      { name: 'Mars', size: 0.65, distance: 45, texture: marsTexture, inclination: 1.84969142, ascendingNode: 49.6, orbitalSpeed: 0.008, rotationPeriod: 24.6, diameter: 6779, distanceFromSun: 227900000, orbitalPeriod: 687, moons: 2, description: 'Mars is the fourth planet from the Sun.' },
-      { name: 'Jupiter', size: 2.0, distance: 65, texture: jupiterTexture, inclination: 1.30439695, ascendingNode: 100.5, orbitalSpeed: 0.005, rotationPeriod: 9.9, diameter: 139820, distanceFromSun: 778500000, orbitalPeriod: 4333, moons: 79, description: 'Jupiter is the largest planet in the Solar System.' },
-      { name: 'Saturn', size: 1.7, distance: 85, texture: saturnTexture, inclination: 2.48599187, ascendingNode: 113.7, orbitalSpeed: 0.003, rotationPeriod: 10.7, diameter: 116460, distanceFromSun: 1434000000, orbitalPeriod: 10759, moons: 62, description: 'Saturn is famous for its ring system.' },
-      { name: 'Uranus', size: 1.5, distance: 105, texture: uranusTexture, inclination: 0.77263783, ascendingNode: 74, orbitalSpeed: 0.002, rotationPeriod: 17.2, diameter: 50724, distanceFromSun: 2871000000, orbitalPeriod: 30688, moons: 27, description: 'Uranus is the seventh planet from the Sun.' },
-      { name: 'Neptune', size: 1.3, distance: 125, texture: neptuneTexture, inclination: 1.77004347, ascendingNode: 131.8, orbitalSpeed: 0.0015, rotationPeriod: 16.1, diameter: 49244, distanceFromSun: 4495000000, orbitalPeriod: 60182, moons: 14, description: 'Neptune is the eighth planet from the Sun.' },
-      { name: '617 Patroclus', size: 0.3, distance: 140, texture: null, color: 0xff0000, inclination: 22.0, ascendingNode: 120.0, orbitalSpeed: 0.0007, rotationPeriod: 0, diameter: 140, distanceFromSun: 780000000, orbitalPeriod: 4300, moons: 0, description: '617 Patroclus is a binary Jupiter trojan asteroid.' }
+      {
+        name: 'Sun',
+        size: 1392000 * sizeScale,  // Tamaño real del Sol escalado
+        distance: 0,  // El Sol está en el centro
+        texture: sunTexture,
+        inclination: 0,
+        ascendingNode: 0,
+        orbitalSpeed: 0,
+        rotationPeriod: 609,
+        diameter: 1392000,
+        distanceFromSun: 0,
+        orbitalPeriod: 'N/A',
+        moons: 0,
+        description: 'The Sun is the star at the center of the Solar System.'
+      },
+      {
+        name: 'Mercury',
+        size: 4879 * sizeScale*10,  // Tamaño real de Mercurio escalado
+        distance: 57910000 * distanceScale,  // Distancia real de Mercurio al Sol escalada
+        texture: mercuryTexture,
+        inclination: 7.00497902,
+        ascendingNode: 48.3,
+        orbitalSpeed: 0.02,
+        rotationPeriod: 1407.6,
+        diameter: 4879,
+        distanceFromSun: 57910000,
+        orbitalPeriod: 88,
+        moons: 0,
+        description: 'Mercury is the smallest planet in the Solar System.'
+      },
+      {
+        name: 'Venus',
+        size: 12104 * sizeScale*10,
+        distance: 108200000 * distanceScale,
+        texture: venusTexture,
+        inclination: 3.39467605,
+        ascendingNode: 76.7,
+        orbitalSpeed: 0.015,
+        rotationPeriod: 5832,
+        diameter: 12104,
+        distanceFromSun: 108200000,
+        orbitalPeriod: 225,
+        moons: 0,
+        description: 'Venus is the second planet from the Sun.'
+      },
+      {
+        name: 'Earth',
+        size: 12742 * sizeScale*10,
+        distance: 149600000 * distanceScale,
+        texture: earthTexture,
+        inclination: 0,
+        ascendingNode: 0,
+        orbitalSpeed: 0.01,
+        rotationPeriod: 24,
+        diameter: 12742,
+        distanceFromSun: 149600000,
+        orbitalPeriod: 365.25,
+        moons: 1,
+        description: 'Earth is the third planet from the Sun.'
+      },
+      {
+        name: 'Mars',
+        size: 6779 * sizeScale*10,
+        distance: 227900000 * distanceScale,
+        texture: marsTexture,
+        inclination: 1.84969142,
+        ascendingNode: 49.6,
+        orbitalSpeed: 0.008,
+        rotationPeriod: 24.6,
+        diameter: 6779,
+        distanceFromSun: 227900000,
+        orbitalPeriod: 687,
+        moons: 2,
+        description: 'Mars is the fourth planet from the Sun.'
+      },
+      {
+        name: 'Jupiter',
+        size: 139820 * sizeScale*10,
+        distance: 778500000 * distanceScale,
+        texture: jupiterTexture,
+        inclination: 1.30439695,
+        ascendingNode: 100.5,
+        orbitalSpeed: 0.005,
+        rotationPeriod: 9.9,
+        diameter: 139820,
+        distanceFromSun: 778500000,
+        orbitalPeriod: 4333,
+        moons: 79,
+        description: 'Jupiter is the largest planet in the Solar System.'
+      },
+      {
+        name: 'Saturn',
+        size: 116460 * sizeScale*10,
+        distance: 1434000000 * distanceScale,
+        texture: saturnTexture,
+        inclination: 2.48599187,
+        ascendingNode: 113.7,
+        orbitalSpeed: 0.003,
+        rotationPeriod: 10.7,
+        diameter: 116460,
+        distanceFromSun: 1434000000,
+        orbitalPeriod: 10759,
+        moons: 62,
+        description: 'Saturn is famous for its ring system.'
+      },
+      {
+        name: 'Uranus',
+        size: 50724 * sizeScale*10,
+        distance: 2871000000 * distanceScale,
+        texture: uranusTexture,
+        inclination: 0.77263783,
+        ascendingNode: 74,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 17.2,
+        diameter: 50724,
+        distanceFromSun: 2871000000,
+        orbitalPeriod: 30688,
+        moons: 27,
+        description: 'Uranus is the seventh planet from the Sun.'
+      },
+      {
+        name: 'Neptune',
+        size: 49244 * sizeScale*10,
+        distance: 4495000000 * distanceScale,
+        texture: neptuneTexture,
+        inclination: 1.77004347,
+        ascendingNode: 131.8,
+        orbitalSpeed: 0.0015,
+        rotationPeriod: 16.1,
+        diameter: 49244,
+        distanceFromSun: 4495000000,
+        orbitalPeriod: 60182,
+        moons: 14,
+        description: 'Neptune is the eighth planet from the Sun.'
+      },
+      {
+        name: '617 Patroclus',
+        size: 140 * sizeScale*10,
+        distance: 780000000 * distanceScale,
+        texture: null,
+        color: 0xff0000,
+        inclination: 22.0,
+        ascendingNode: 120.0,
+        orbitalSpeed: 0.0007,
+        rotationPeriod: 0,
+        diameter: 140,
+        distanceFromSun: 780000000,
+        orbitalPeriod: 4300,
+        moons: 0,
+        description: '617 Patroclus is a binary Jupiter trojan asteroid.'
+      }
     ];
+
+
+
 
     const createdObjects = [];
     celestialBodies.forEach((data) => {
@@ -118,7 +268,7 @@ const SolarSystem = () => {
 
     starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
     const starField = new THREE.Points(starGeometry, starMaterial);
-    scene.add(starField);
+    // scene.add(starField);
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
