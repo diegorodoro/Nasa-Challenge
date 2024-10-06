@@ -5,9 +5,13 @@ import PlanetCanvas from './PlanetCanvas';
 const PlanetInfo = ({ planet, onClose }) => {
   return (
     <div style={infoContainerStyle}>
+      {/* Contenedor del planeta */}
       <div style={planetContainerStyle}>
-        <PlanetCanvas planetTexture={planet.texture} /> {/* Renderizar el planeta en 3D */}
+        {/* Componente que muestra el planeta con el tamaño ajustable */}
+        <PlanetCanvas planetTexture={planet.texture} size={18} /> {/* Ajusta el tamaño del planeta a 18 */}
       </div>
+
+      {/* Contenedor de la descripción del planeta */}
       <div style={descriptionContainerStyle}>
         <h2 style={titleStyle}>{planet.name}</h2>
         <p>{planet.description}</p>
@@ -27,20 +31,24 @@ const PlanetInfo = ({ planet, onClose }) => {
 // Estilos para la ficha informativa
 const infoContainerStyle = {
   position: 'fixed',
-  top: '5%',
-  left: '5%',
-  width: '900px',
-  height: '600px',
-  backgroundColor: 'rgba(0, 0, 0, 0.9)',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '80%', // Cambia el ancho para centrarlo mejor
+  height: 'auto',
+  maxWidth: '1200px',
+  backgroundColor: 'rgba(20, 20, 20, 0.85)', // Un fondo más oscuro para contraste
   color: 'white',
   display: 'flex',
-  borderRadius: '10px',
-  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)',
+  borderRadius: '20px', // Bordes más redondeados
+  boxShadow: '0 10px 40px rgba(0, 0, 0, 0.8)', // Sombra más suave
   zIndex: 5,
+  padding: '30px',
+  overflowY: 'auto',
 };
 
 const planetContainerStyle = {
-  flex: 1.2,
+  flex: 1.5, // Aumenta el espacio del contenedor del planeta
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -49,31 +57,37 @@ const planetContainerStyle = {
 
 const descriptionContainerStyle = {
   flex: 1.8,
-  padding: '40px',
+  padding: '30px',
   overflowY: 'auto',
+  fontSize: '18px', // Tamaño de fuente mayor para mejor lectura
+  lineHeight: '1.6',
 };
 
 const titleStyle = {
   marginTop: 0,
-  fontSize: '32px',
+  fontSize: '38px', // Título más grande
   color: '#ffd700', // Dorado para destacar el nombre del planeta
+  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
 };
 
 const infoListStyle = {
   listStyleType: 'none',
   padding: 0,
   margin: '20px 0',
+  fontSize: '18px',
 };
 
 const closeButtonStyle = {
   padding: '15px 30px',
   backgroundColor: '#ff5f5f',
   border: 'none',
-  borderRadius: '8px',
+  borderRadius: '12px', // Botón con bordes redondeados
   color: 'white',
   cursor: 'pointer',
-  marginTop: '20px',
-  fontSize: '16px',
+  marginTop: '30px',
+  fontSize: '18px',
+  alignSelf: 'flex-start', // Alineación del botón de cerrar
+  transition: 'background 0.3s',
 };
 
 export default PlanetInfo;

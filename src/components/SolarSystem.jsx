@@ -17,7 +17,9 @@ const SolarSystem = () => {
     renderer.shadowMap.enabled = true; // Habilitar sombras para mejorar el renderizado
 
     // Añadir el renderizador al DOM
-    mountRef.current.appendChild(renderer.domElement);
+    if (mountRef.current) {
+      mountRef.current.appendChild(renderer.domElement);
+    }
 
     // Configurar controles de la cámara
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -44,20 +46,21 @@ const SolarSystem = () => {
     directionalLight2.position.set(-50, -50, -50);
     scene.add(directionalLight2);
 
-    // Cargar las texturas de los planetas y el Sol
+    // Cargar las texturas de los planetas, anillos y estrellas
     const textureLoader = new THREE.TextureLoader();
+    const saturnRingTexture = textureLoader.load('/textures/saturn_ring.png'); // Textura del anillo de Saturno
 
     // Datos de los planetas con más información y texturas
     const planetData = [
-      { name: 'Sun', size: 10, distance: 0, texture: 'sun.jpg', description: 'The Sun is the star at the center of the Solar System.', diameter: 1392000, distanceFromSun: 0, rotationPeriod: 609, orbitalPeriod: 'N/A', moons: 0 },
-      { name: 'Mercury', size: 1, distance: 15, texture: 'mercury.jpg', description: 'Mercury is the smallest planet in the Solar System.', diameter: 4879, distanceFromSun: 57910000, rotationPeriod: 1407.6, orbitalPeriod: 88, moons: 0 },
-      { name: 'Venus', size: 1.5, distance: 25, texture: 'venus.jpg', description: 'Venus is the second planet from the Sun.', diameter: 12104, distanceFromSun: 108200000, rotationPeriod: 5832, orbitalPeriod: 225, moons: 0 },
-      { name: 'Earth', size: 2, distance: 35, texture: 'earth.jpg', description: 'Earth is the third planet from the Sun and our home planet.', diameter: 12742, distanceFromSun: 149600000, rotationPeriod: 24, orbitalPeriod: 365.25, moons: 1 },
-      { name: 'Mars', size: 1.2, distance: 45, texture: 'mars.jpg', description: 'Mars is the fourth planet from the Sun, also known as the Red Planet.', diameter: 6779, distanceFromSun: 227900000, rotationPeriod: 24.6, orbitalPeriod: 687, moons: 2 },
-      { name: 'Jupiter', size: 5, distance: 65, texture: 'jupiter.jpg', description: 'Jupiter is the largest planet in the Solar System.', diameter: 139820, distanceFromSun: 778500000, rotationPeriod: 9.9, orbitalPeriod: 4333, moons: 79 },
-      { name: 'Saturn', size: 4.5, distance: 85, texture: 'saturn.jpg', description: 'Saturn is the sixth planet from the Sun, known for its ring system.', diameter: 116460, distanceFromSun: 1434000000, rotationPeriod: 10.7, orbitalPeriod: 10759, moons: 62 },
-      { name: 'Uranus', size: 3, distance: 105, texture: 'uranus.jpg', description: 'Uranus is the seventh planet from the Sun.', diameter: 50724, distanceFromSun: 2871000000, rotationPeriod: 17.2, orbitalPeriod: 30688, moons: 27 },
-      { name: 'Neptune', size: 3, distance: 125, texture: 'neptune.jpg', description: 'Neptune is the eighth planet from the Sun.', diameter: 49244, distanceFromSun: 4495000000, rotationPeriod: 16.1, orbitalPeriod: 60182, moons: 14 }
+      { name: 'Sun', size: 10, distance: 0, texture: 'sun.jpg', description: 'The Sun is the star at the center of the Solar System.', diameter: 1392000, distanceFromSun: 0, rotationPeriod: 609, orbitalPeriod: 'N/A', moons: 0, y: 0, inclination: 0, ascendingNode: 0 },
+      { name: 'Mercury', size: 1, distance: 15, texture: 'mercury.jpg', description: 'Mercury is the smallest planet in the Solar System.', diameter: 4879, distanceFromSun: 57910000, rotationPeriod: 1407.6, orbitalPeriod: 88, moons: 0, y: 0, inclination: 7, ascendingNode: 48.3 },
+      { name: 'Venus', size: 1.5, distance: 25, texture: 'venus.jpg', description: 'Venus is the second planet from the Sun.', diameter: 12104, distanceFromSun: 108200000, rotationPeriod: 5832, orbitalPeriod: 225, moons: 0, y: 0, inclination: 3.4, ascendingNode: 76.7 },
+      { name: 'Earth', size: 2, distance: 35, texture: 'earth.jpg', description: 'Earth is the third planet from the Sun and our home planet.', diameter: 12742, distanceFromSun: 149600000, rotationPeriod: 24, orbitalPeriod: 365.25, moons: 1, y: 0, inclination: 0, ascendingNode: 0 },
+      { name: 'Mars', size: 1.2, distance: 45, texture: 'mars.jpg', description: 'Mars is the fourth planet from the Sun, also known as the Red Planet.', diameter: 6779, distanceFromSun: 227900000, rotationPeriod: 24.6, orbitalPeriod: 687, moons: 2, y: 0, inclination: 1.85, ascendingNode: 49.6 },
+      { name: 'Jupiter', size: 5, distance: 65, texture: 'jupiter.jpg', description: 'Jupiter is the largest planet in the Solar System.', diameter: 139820, distanceFromSun: 778500000, rotationPeriod: 9.9, orbitalPeriod: 4333, moons: 79, y: 0, inclination: 1.3, ascendingNode: 100.5 },
+      { name: 'Saturn', size: 4.5, distance: 85, texture: 'saturn.jpg', description: 'Saturn is the sixth planet from the Sun, known for its ring system.', diameter: 116460, distanceFromSun: 1434000000, rotationPeriod: 10.7, orbitalPeriod: 10759, moons: 62, y: 0, inclination: 2.5, ascendingNode: 113.7 },
+      { name: 'Uranus', size: 3, distance: 105, texture: 'uranus.jpg', description: 'Uranus is the seventh planet from the Sun.', diameter: 50724, distanceFromSun: 2871000000, rotationPeriod: 17.2, orbitalPeriod: 30688, moons: 27, y: 0, inclination: 0.8, ascendingNode: 74 },
+      { name: 'Neptune', size: 3, distance: 125, texture: 'neptune.jpg', description: 'Neptune is the eighth planet from the Sun.', diameter: 49244, distanceFromSun: 4495000000, rotationPeriod: 16.1, orbitalPeriod: 60182, moons: 14, y: 0, inclination: 1.8, ascendingNode: 131.8 }
     ];
 
     // Crear planetas y órbitas con texturas y órbitas más finas
@@ -70,12 +73,17 @@ const SolarSystem = () => {
       const planet = new THREE.Mesh(geometry, material);
 
       // Posicionar el planeta basado en su distancia al Sol
-      planet.position.x = data.distance;
+      planet.position.set(data.distance, 0, 0);
       planet.castShadow = true; // Permitir sombras en el planeta
       planet.receiveShadow = true; // Permitir que reciba sombras
-      scene.add(planet);
 
-      // Añadir la propiedad de nombre, descripción y velocidad orbital a cada planeta
+      // Crear grupo para aplicar rotación e inclinación de órbita
+      const orbitGroup = new THREE.Group();
+      orbitGroup.rotation.z = THREE.MathUtils.degToRad(data.inclination); // Inclinación de la órbita
+      orbitGroup.rotation.y = THREE.MathUtils.degToRad(data.ascendingNode); // Nodo ascendente
+      orbitGroup.add(planet);
+
+      // Añadir la propiedad de nombre y descripción a cada planeta
       planet.userData = { name: data.name, description: data.description, texture: data.texture, ...data };
       createdPlanets.push(planet);
 
@@ -84,8 +92,20 @@ const SolarSystem = () => {
         const orbitGeometry = new THREE.RingGeometry(data.distance - 0.2, data.distance + 0.2, 64);
         const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, opacity: 0.3, transparent: true });
         const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
-        orbit.rotation.x = Math.PI / 2;
-        scene.add(orbit);
+        orbit.rotation.x = Math.PI / 2; // Rotar la órbita para que esté plana
+        orbitGroup.add(orbit);
+      }
+
+      // Añadir el grupo a la escena
+      scene.add(orbitGroup);
+
+      // Añadir anillo de Saturno
+      if (data.name === 'Saturn') {
+        const ringGeometry = new THREE.RingGeometry(data.size + 1, data.size + 3, 64);
+        const ringMaterial = new THREE.MeshBasicMaterial({ map: saturnRingTexture, side: THREE.DoubleSide, transparent: true });
+        const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.rotation.x = Math.PI / 2; // Orientar el anillo de Saturno
+        planet.add(ring); // Añadir el anillo como hijo del planeta Saturno
       }
     });
 
@@ -161,7 +181,9 @@ const SolarSystem = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('click', onMouseClick);
-      mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
     };
   }, []);
 
