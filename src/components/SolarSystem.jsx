@@ -239,23 +239,73 @@ const SolarSystem = () => {
         description: 'Neptune is the eighth planet from the Sun.'
       },
       {
-        name: '617 Patroclus',
-        size: 140 * sizeScale * 10,
-        distance: 780000000 * distanceScale,
-        texture: null,
-        SMA: 5.206645,
-        color: 0xff0000,
-        inclination: 22.0,
-        eccentricity: 0.14,
-        ascendingNode: 120.0,
-        orbitalSpeed: 0.0007,
-        rotationPeriod: 0,
-        diameter: 140,
-        distanceFromSun: 780000000,
-        orbitalPeriod: 4300,
+        name: 'Bennu',
+        size: 482,
+        type: 'Risk',
+        distance: 14767294, //au
+        texture: '',
+        SMA: 1.125960,
+        inclination: 6,
+        eccentricity: 0.204,
+        ascendingNode: '',
+        orbitalSpeed: '',
+        rotationPeriod: '',
+        distanceFromSun: '',
+        orbitalPeriod: '',
         moons: 0,
-        description: '617 Patroclus is a binary Jupiter trojan asteroid.'
-      }
+        description: 'Bennu is a near-Earth asteroid.'
+      },
+      {
+        name: '951 Gaspra',
+        size: 1300,
+        type: 'Near',
+        distance: NaN, //au
+        texture: '',
+        SMA: 2.209877,
+        inclination: 4.1061,
+        eccentricity: 0.173250,
+        ascendingNode: '',
+        orbitalSpeed: '',
+        rotationPeriod: '',
+        distanceFromSun: '',
+        orbitalPeriod: '',
+        moons: 0,
+        description: 'Bennu is a near-Earth asteroid.'
+      },
+      {
+        name: '1 Ceres',
+        size: 500000,
+        type: 'Near',
+        distance: '', //au
+        texture: '',
+        SMA: 2.766620,
+        inclination: 10.6,
+        eccentricity: 0.079,
+        ascendingNode: '',
+        orbitalSpeed: '',
+        rotationPeriod: '',
+        distanceFromSun: '',
+        orbitalPeriod: '',
+        moons: 0,
+        description: 'Bennu is a near-Earth asteroid.'
+      },
+      // {
+      //   name: '1 Ceres',
+      //   size: ,
+      //   type: '',
+      //   distance: , //au
+      //   texture: '',
+      //   SMA: ,
+      //   inclination: ,
+      //   eccentricity: ,
+      //   ascendingNode: '',
+      //   orbitalSpeed: '',
+      //   rotationPeriod: '',
+      //   distanceFromSun: '',
+      //   orbitalPeriod: '',
+      //   moons: 0,
+      //   description: 'Bennu is a near-Earth asteroid.'
+      // },
     ];
 
     
@@ -290,9 +340,18 @@ const SolarSystem = () => {
           points.push(new THREE.Vector3(x * 100, 0, z * 100));
         }
         orbitPoints.setFromPoints(points);
+        var color 
+        if (data.type === 'Risk') {
+          color = 0xff0000
+        } else if (data.type === 'Near') {
+          color = 0x0000ff
+        } else {
+          color = 0xffffff
+        }
+
         const orbitLine = new THREE.Line(
           orbitPoints,
-          new THREE.LineBasicMaterial({ color: 0xffffff })
+          new THREE.LineBasicMaterial({ color: color })
         );
         orbitGroup.add(orbitLine);
       }
