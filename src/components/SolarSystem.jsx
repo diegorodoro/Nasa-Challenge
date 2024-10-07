@@ -14,6 +14,7 @@ import saturnRingTexture from '../assets/textures/saturn-ring.png';
 import uranusTexture from '../assets/textures/uranus.webp';
 import neptuneTexture from '../assets/textures/neptune.jpg';
 
+
 const SolarSystem = () => {
   const mountRef = useRef(null);
   const [selectedObject, setSelectedObject] = useState(null);
@@ -66,7 +67,7 @@ const SolarSystem = () => {
     const starGeometry = new THREE.BufferGeometry();
     const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
     const starVertices = [];
-    const starCount = 2500;  
+    const starCount = 4000;  
     for (let i = 0; i < starCount; i++) {
       const x = THREE.MathUtils.randFloatSpread(10000); 
       const y = THREE.MathUtils.randFloatSpread(10000);
@@ -77,6 +78,17 @@ const SolarSystem = () => {
     starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
     const starField = new THREE.Points(starGeometry, starMaterial);
     scene.add(starField);
+
+    const orbitColors = {
+      Mercury: '#9AD9B9',
+      Venus: '#e6a66f',
+      Earth: '#6b93d6',
+      Mars: '#E75353',
+      Jupiter: '#e3a551',
+      Saturn: '#FFA500',
+      Uranus: '#7FCFCF',
+      Neptune: '#5364E7'
+    };
 
 
     // Datos de los cuerpos celestes con información completa para las fichas
@@ -255,6 +267,297 @@ const SolarSystem = () => {
         orbitalPeriod: 4300,
         moons: 0,
         description: '617 Patroclus is a binary Jupiter trojan asteroid.'
+      },
+      {
+        name: 'Ceres',
+        size: 939.4 * sizeScale * 10,
+        distance: 414000000 * distanceScale,
+        texture: null,
+        SMA: 2.77,
+        color: 0xFFD700,
+        inclination: 10.59,
+        eccentricity: 0.07934,
+        ascendingNode: 80.0,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 9,
+        diameter: 939.4,
+        distanceFromSun: 414000000,
+        orbitalPeriod: 1680,
+        moons: 0,
+        description: 'Ceres is the largest object in the asteroid belt, considered both an asteroid and a dwarf planet.'
+      },
+      {
+        name: 'Pallas',
+        size: 512 * sizeScale * 10,
+        distance: 414000000 * distanceScale,
+        texture: null,
+        SMA: 2.77,
+        color: 0x7FFF00,
+        inclination: 34.8,
+        eccentricity: 0.22995,
+        ascendingNode: 173.1,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 7,
+        diameter: 512,
+        distanceFromSun: 414000000,
+        orbitalPeriod: 1684,
+        moons: 0,
+        description: 'Pallas is the third largest object in the asteroid belt.'
+      },
+      {
+        name: '1 Ceres',
+        size: 939.4 * sizeScale * 10,
+        distance: 414000000 * distanceScale,
+        SMA: 2.77,
+        color: 0xFFD700,
+        inclination: 10.59,
+        eccentricity: 0.07934,
+        ascendingNode: 80.0,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 9,
+        diameter: 939.4,
+        distanceFromSun: 414000000,
+        orbitalPeriod: 1680,
+        moons: 0,
+        description: 'Ceres is the largest object in the asteroid belt, considered both an asteroid and a dwarf planet.',
+      },
+      {
+        name: '2 Pallas',
+        size: 512 * sizeScale * 10,
+        distance: 414000000 * distanceScale,
+        SMA: 2.77,
+        color: 0x7FFF00,
+        inclination: 34.8,
+        eccentricity: 0.22995,
+        ascendingNode: 173.1,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 7,
+        diameter: 512,
+        distanceFromSun: 414000000,
+        orbitalPeriod: 1684,
+        moons: 0,
+        description: 'Pallas is the third largest object in the asteroid belt.',
+      },
+      {
+        name: '3 Juno',
+        size: 233 * sizeScale * 10,
+        distance: 395000000 * distanceScale,
+        SMA: 2.67,
+        color: 0x8B4513,
+        inclination: 12.98,
+        eccentricity: 0.255,
+        ascendingNode: 170.0,
+        orbitalSpeed: 0.003,
+        rotationPeriod: 7.2,
+        diameter: 233,
+        distanceFromSun: 395000000,
+        orbitalPeriod: 1593,
+        moons: 0,
+        description: 'Juno is one of the largest members of the asteroid belt.',
+      },
+      {
+        name: '4 Vesta',
+        size: 525.4 * sizeScale * 10,
+        distance: 353000000 * distanceScale,
+        SMA: 2.36,
+        color: 0xFFA500,
+        inclination: 7.14,
+        eccentricity: 0.089,
+        ascendingNode: 103.8,
+        orbitalSpeed: 0.003,
+        rotationPeriod: 5.3,
+        diameter: 525.4,
+        distanceFromSun: 353000000,
+        orbitalPeriod: 1325,
+        moons: 0,
+        description: 'Vesta is the second largest object in the asteroid belt.',
+      },
+      {
+        name: '10 Hygiea',
+        size: 431 * sizeScale * 10,
+        distance: 470000000 * distanceScale,
+        SMA: 3.14,
+        color: 0xD3D3D3,
+        inclination: 3.84,
+        eccentricity: 0.117,
+        ascendingNode: 283.0,
+        orbitalSpeed: 0.0017,
+        rotationPeriod: 27,
+        diameter: 431,
+        distanceFromSun: 470000000,
+        orbitalPeriod: 2038,
+        moons: 0,
+        description: 'Hygiea is the fourth largest object in the asteroid belt.',
+      },
+      {
+        name: '243 Ida',
+        size: 31.4 * sizeScale * 10,
+        distance: 428000000 * distanceScale,
+        SMA: 2.86,
+        color: 0x808080,
+        inclination: 1.14,
+        eccentricity: 0.045,
+        ascendingNode: 163.8,
+        orbitalSpeed: 0.001,
+        rotationPeriod: 4.63,
+        diameter: 31.4,
+        distanceFromSun: 428000000,
+        orbitalPeriod: 1684,
+        moons: 1,
+        description: 'Ida is a member of the Koronis family of asteroids.',
+      },
+      {
+        name: '433 Eros',
+        size: 16.84 * sizeScale * 10,
+        distance: 218000000 * distanceScale,
+        SMA: 1.46,
+        color: 0xDAA520,
+        inclination: 10.83,
+        eccentricity: 0.223,
+        ascendingNode: 304.4,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 5.27,
+        diameter: 16.84,
+        distanceFromSun: 218000000,
+        orbitalPeriod: 643,
+        moons: 0,
+        description: 'Eros is a near-Earth asteroid.',
+      },
+      {
+        name: '951 Gaspra',
+        size: 18.2 * sizeScale * 10,
+        distance: 329000000 * distanceScale,
+        SMA: 2.21,
+        color: 0xB22222,
+        inclination: 4.11,
+        eccentricity: 0.173,
+        ascendingNode: 90.2,
+        orbitalSpeed: 0.001,
+        rotationPeriod: 7,
+        diameter: 18.2,
+        distanceFromSun: 329000000,
+        orbitalPeriod: 1194,
+        moons: 0,
+        description: 'Gaspra was the first asteroid to be closely approached by a spacecraft.',
+      },
+      {
+        name: '101955 Bennu',
+        size: 0.49 * sizeScale * 10,
+        distance: 135000000 * distanceScale,
+        SMA: 1.13,
+        color: 0x778899,
+        inclination: 6.03,
+        eccentricity: 0.203,
+        ascendingNode: 2.04,
+        orbitalSpeed: 0.0015,
+        rotationPeriod: 4.3,
+        diameter: 0.49,
+        distanceFromSun: 135000000,
+        orbitalPeriod: 436,
+        moons: 0,
+        description: 'Bennu is a near-Earth asteroid and the target of the OSIRIS-REx mission.',
+      },
+      {
+        name: '25143 Itokawa',
+        size: 0.33 * sizeScale * 10,
+        distance: 150000000 * distanceScale,
+        SMA: 1.32,
+        color: 0xA0522D,
+        inclination: 1.62,
+        eccentricity: 0.28,
+        ascendingNode: 128.2,
+        orbitalSpeed: 0.002,
+        rotationPeriod: 12.1,
+        diameter: 0.33,
+        distanceFromSun: 150000000,
+        orbitalPeriod: 556,
+        moons: 0,
+        description: 'Itokawa is a near-Earth asteroid studied by the Hayabusa mission.',
+      },
+      {
+        name: '1P/Halley',
+        size: 11 * sizeScale * 10,
+        distance: 0.586 * distanceScale,
+        SMA: 17.8,
+        color: 0xADD8E6,
+        inclination: 162.26,
+        eccentricity: 0.967,
+        ascendingNode: 58.4,
+        orbitalSpeed: 0.0007,
+        rotationPeriod: 2.2,
+        diameter: 11,
+        distanceFromSun: 58600000,
+        orbitalPeriod: 27690,
+        moons: 0,
+        description: 'Halley\'s Comet is the most famous periodic comet visible from Earth.',
+      },
+      {
+        name: '67P/Churyumov–Gerasimenko',
+        size: 4.1 * sizeScale * 10,
+        distance: 370000000 * distanceScale,
+        SMA: 3.5,
+        color: 0x808080,
+        inclination: 7.04,
+        eccentricity: 0.64,
+        ascendingNode: 50.4,
+        orbitalSpeed: 0.001,
+        rotationPeriod: 12.4,
+        diameter: 4.1,
+        distanceFromSun: 370000000,
+        orbitalPeriod: 2339,
+        moons: 0,
+        description: '67P is the target of the Rosetta mission and has a distinct "rubber duck" shape.',
+      },
+      {
+        name: '19P/Borrelly',
+        size: 8 * sizeScale * 10,
+        distance: 290000000 * distanceScale,
+        SMA: 3.58,
+        color: 0xA9A9A9,
+        inclination: 30.33,
+        eccentricity: 0.624,
+        ascendingNode: 75.1,
+        orbitalSpeed: 0.001,
+        rotationPeriod: 12.5,
+        diameter: 8,
+        distanceFromSun: 290000000,
+        orbitalPeriod: 2304,
+        moons: 0,
+        description: 'Borrelly is a periodic comet, visited by the Deep Space 1 mission.',
+      },
+      {
+        name: '81P/Wild',
+        size: 5 * sizeScale * 10,
+        distance: 385000000 * distanceScale,
+        SMA: 3.5,
+        color: 0xA52A2A,
+        inclination: 3.24,
+        eccentricity: 0.54,
+        ascendingNode: 136.2,
+        orbitalSpeed: 0.001,
+        rotationPeriod: 13.5,
+        diameter: 5,
+        distanceFromSun: 385000000,
+        orbitalPeriod: 2360,
+        moons: 0,
+        description: 'Wild 2 is a periodic comet visited by the Stardust mission.',
+      },
+      {
+        name: '2P/Encke',
+        size: 4.8 * sizeScale * 10,
+        distance: 170000000 * distanceScale,
+        SMA: 2.21,
+        color: 0x5F9EA0,
+        inclination: 11.78,
+        eccentricity: 0.847,
+        ascendingNode: 334.6,
+        orbitalSpeed: 0.001,
+        rotationPeriod: 15.6,
+        diameter: 4.8,
+        distanceFromSun: 170000000,
+        orbitalPeriod: 1204,
+        moons: 0,
+        description: 'Encke is a periodic comet with the shortest period of any known comet.',
       }
     ];
 
@@ -279,7 +582,7 @@ const SolarSystem = () => {
       orbitGroup.add(celestialBody);
       scene.add(orbitGroup);
 
-      // Crear órbitas usando ecuación polar (igual que antes)
+      // Crear órbitas usando ecuación polar y aplicar colores personalizados
       if (data.name !== 'Sun') {
         const orbitPoints = new THREE.BufferGeometry();
         const points = [];
@@ -289,10 +592,20 @@ const SolarSystem = () => {
           const z = r * Math.sin(theta);
           points.push(new THREE.Vector3(x * 100, 0, z * 100));
         }
+
+        if (data.name === 'Saturn') {
+          const saturnRing = textureLoader.load(saturnRingTexture);
+          const ringGeometry = new THREE.RingGeometry(data.size + 1, data.size + 3, 64);
+          const ringMaterial = new THREE.MeshBasicMaterial({ map: saturnRing, side: THREE.DoubleSide, transparent: true });
+          const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+          ring.rotation.x = Math.PI / 2;
+          celestialBody.add(ring);
+        }
+  
         orbitPoints.setFromPoints(points);
         const orbitLine = new THREE.Line(
           orbitPoints,
-          new THREE.LineBasicMaterial({ color: 0xffffff })
+          new THREE.LineBasicMaterial({ color: orbitColors[data.name] || 0xffffff }) // Color personalizado
         );
         orbitGroup.add(orbitLine);
       }
@@ -325,7 +638,8 @@ const SolarSystem = () => {
       const intersects = raycaster.intersectObjects(createdObjects);
       if (intersects.length > 0) {
         const celestialBody = intersects[0].object.userData;
-        setSelectedObject(celestialBody);
+        // Redirigir a la página correspondiente en lugar de mostrar información
+        window.location.href = `#`; // Coloca aquí la URL específica de cada planeta
       }
     };
 
@@ -351,10 +665,8 @@ const SolarSystem = () => {
           object.position.z = r * Math.sin(angle) * 100;
         }
 
-        // Rotación sobre su eje
         object.rotation.y += rotationPeriod ? (1 / rotationPeriod) * 0.01 : 0.001;
 
-        // Proyectar la posición para etiquetas
         const vector = new THREE.Vector3();
         object.getWorldPosition(vector);
         vector.project(camera);
