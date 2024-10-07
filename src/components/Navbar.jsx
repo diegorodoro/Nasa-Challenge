@@ -36,7 +36,7 @@ const Navbar = ({ currentPlanet, totalPlanets }) => {
               <span className="block w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full absolute bottom-[-4px] left-0" />
             </Link>
             <Link 
-              to="/about" 
+              to="/about_Team" 
               className="text-neutral-300 hover:text-white transition-colors duration-300 font-light"
               onClick={closeMenu}
             >
