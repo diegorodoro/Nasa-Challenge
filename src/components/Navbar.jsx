@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ currentPlanet, totalPlanets }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,6 +19,7 @@ const Navbar = ({ currentPlanet, totalPlanets }) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a
+              onClick={()=>navigate('/team')}
               href="/team"
               className="text-neutral-300 hover:text-white transition-colors duration-300 font-light relative group"
             >
