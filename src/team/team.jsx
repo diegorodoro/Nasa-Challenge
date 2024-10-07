@@ -1,7 +1,5 @@
 import React from 'react';
 import Navbar from '../components/Navbar';  // Add this line
-// import GansosNasa from '../../assets/images/Gansos-Nasa.jpg'
-import GansosNasa from '../assets/images/Gansos-Nasa.jpg';  // Add this line
 import background from "../assets/images/background.jpg";
 import Footer from '../detailViewAlex/components/footer';  // Add this line
 import { motion } from 'framer-motion';

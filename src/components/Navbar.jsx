@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import space from '../assets/images/space.png'
+import { Link } from 'react-router-dom';
 
 const Navbar = ({ currentPlanet, totalPlanets }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,24 +19,32 @@ const Navbar = ({ currentPlanet, totalPlanets }) => {
           </a>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a
-              onClick={()=>navigate('/team')}
-              href="/team"
-              className="text-neutral-300 hover:text-white transition-colors duration-300 font-light relative group"
+          <nav className="p-4 flex space-x-4">
+            <Link 
+              to="/orrey" 
+              className="flex items-center -mt-3 cursor-pointer hover:opacity-65 transition-opacity duration-200"
+            >
+              <p className="text-white text-lg mr-2">Orrey</p>
+              <img src={space} alt="Orrey" className="h-12 w-12" />
+            </Link>
+            <Link 
+              to="/team" 
+              className="text-neutral-300 hover:text-white transition-colors duration-300 font-light"
+              onClick={closeMenu}
             >
               Team
-              {/* White underline hover effect */}
-              <span className="block w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full absolute bottom-[-4px] left-0"></span>
-            </a>
-            <a
-              href="/about"
-              className="text-neutral-300 hover:text-white transition-colors duration-300 font-light relative group"
+              <span className="block w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full absolute bottom-[-4px] left-0" />
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-neutral-300 hover:text-white transition-colors duration-300 font-light"
+              onClick={closeMenu}
             >
               About
-              {/* White underline hover effect */}
-              <span className="block w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full absolute bottom-[-4px] left-0"></span>
-            </a>
+              <span className="block w-0 h-[2px] bg-white transition-all duration-300 group-hover:w-full absolute bottom-[-4px] left-0" > 
+                
+              </span>
+            </Link>
           </nav>
 
           {/* Mobile Menu Toggle Button */}
@@ -52,21 +62,28 @@ const Navbar = ({ currentPlanet, totalPlanets }) => {
       {isOpen && (
         <div className="md:hidden bg-black/90 backdrop-blur-md border-t border-neutral-800">
           <nav className="p-4">
-            <a
-              href="/team"
-              className="block text-neutral-300 hover:text-white transition-colors duration-300 font-light mb-4"
-              onClick={closeMenu}
-            >
-              Team
-            </a>
-            <a
-              href="/about"
-              className="block text-neutral-300 hover:text-white transition-colors duration-300 font-light"
-              onClick={closeMenu}
-            >
-              About
-            </a>
-          </nav>
+      <Link 
+        to="/orrey" 
+        className="flex items-center cursor-pointer hover:opacity-65 transition-opacity duration-200 mb-3"
+      >
+        <p className="text-white text-lg mr-2">Orrey</p>
+        <img src={spaceImage} alt="Orrey" className="h-24 w-24" />
+      </Link>
+      <Link 
+        to="/team" 
+        className="block text-neutral-300 hover:text-white transition-colors duration-300 font-light mb-4"
+        onClick={closeMenu}
+      >
+        Team
+      </Link>
+      <Link 
+        to="/about" 
+        className="block text-neutral-300 hover:text-white transition-colors duration-300 font-light"
+        onClick={closeMenu}
+      >
+        About
+      </Link>
+    </nav>
         </div>
       )}
 

@@ -4,15 +4,15 @@ import { useSpring, animated } from '@react-spring/web';
 
 const Loading2D = () => {
   // Rocket shaking and lift-off effect
-  const { y, x } = useSpring({
-    from: { y: 100, x: -5 },
+  const { x, y } = useSpring({
+    from: { x: -10, y: -50 }, // Posición inicial
     to: async (next) => {
       while (true) {
-        await next({ y: 0, x: 5 }); // Slight side shake
-        await next({ y: -20, x: -5 }); // Lift-off with side shake
+        await next({ x: 0, y: -10 }); // Movimiento hacia la derecha y arriba
+        await next({ x: 0, y: 0 }); // Regresar a la posición inicial
       }
     },
-    config: { tension: 180, friction: 10 },
+    config: { tension: 0, friction: 0 },
   });
 
   // Progress bar animation
@@ -36,7 +36,7 @@ const Loading2D = () => {
         {/* Rocket Icon */}
         <animated.div
           style={{
-            transform: x.to((val) => `translate(${val}px, ${y.get()}px)`), // Shaking and lifting effect
+            transform: x.to((val) => `translate(${val}px, ${y.get()}px)`), // Aplicar el efecto de sacudida
           }}
         >
           <FaRocket className="text-6xl mb-4 text-yellow-300 drop-shadow-lg" />
@@ -45,14 +45,6 @@ const Loading2D = () => {
 
       {/* Loading Text */}
       <p className="text-2xl mt-4">Blasting off!</p>
-
-      {/* Loading Bar */}
-      <div className="w-64 mt-8 h-2 bg-white/20 rounded-full overflow-hidden">
-        <animated.div
-          className="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-yellow-500"
-          style={{ width }}
-        />
-      </div>
     </div>
   );
 };

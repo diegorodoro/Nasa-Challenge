@@ -18,7 +18,6 @@ import Navbar from './Navbar';  // Add this line
 import RadialMenu from './RadialMenu';  // Add this line
 import StarField from './StarField';
 import Loading2D from './Loading2D';
-import RocketLaunch from './RocketLaunch';
 
 
 const CurvedText = ({ text, radius, size, color }) => {
@@ -258,6 +257,7 @@ const PlanetCarousel = () => {
   };
 
   if (isLoading) {
+    console.log('Loading...');
     return <Loading2D />;
   }
 
