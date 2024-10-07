@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import PlanetInfo from './PlanetInfo';
+import { useNavigate } from 'react-router-dom';
 
 import sunTexture from '../assets/textures/sun.png';
 import mercuryTexture from '../assets/textures/mercury.webp';
@@ -13,6 +14,35 @@ import saturnTexture from '../assets/textures/saturn.jpg';
 import saturnRingTexture from '../assets/textures/saturn-ring.png';
 import uranusTexture from '../assets/textures/uranus.webp';
 import neptuneTexture from '../assets/textures/neptune.jpg';
+
+
+const BackButton = () => {
+  const navigate = useNavigate();
+
+  return (
+    <button
+      style={{
+        position: 'absolute',
+        top: '20px', 
+        left: '20px', 
+        padding: '10px 20px',
+        fontSize: '16px',
+        backgroundColor: '#2c3e50', 
+        color: '#ecf0f1', 
+        border: '1px solid #34495e', 
+        borderRadius: '8px', 
+        cursor: 'pointer',
+        zIndex: 10000, 
+        transition: 'background-color 0.3s ease', 
+      }}
+      onClick={() => navigate('/')} 
+      onMouseEnter={(e) => (e.target.style.backgroundColor = '#34495e')} 
+      onMouseLeave={(e) => (e.target.style.backgroundColor = '#2c3e50')} 
+    >
+      Back
+    </button>
+  );
+}; 
 
 
 const SolarSystem = () => {
@@ -729,6 +759,7 @@ const SolarSystem = () => {
 
   return (
     <>
+      <BackButton />
       <div ref={mountRef} style={{ width: '100vw', height: '100vh', position: 'absolute', top: 0, zIndex: 1 }} />
       {selectedObject && (
         <PlanetInfo planet={selectedObject} onClose={() => setSelectedObject(null)} />
