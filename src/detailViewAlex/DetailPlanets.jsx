@@ -11,6 +11,7 @@ import planets from '../data/detailDirectory';
 import Footer from './components/footer';
 import Header from './components/header';
 import { CaretRightIcon } from "@radix-ui/react-icons";
+import { useSearchParams } from 'react-router-dom';
 
 function Planet({ planet, planetPosition }) {
     const texture = useLoader(TextureLoader, planet.mesh);
@@ -55,8 +56,10 @@ function Planet({ planet, planetPosition }) {
 }
 
 export default function DetailView() {
+    const [searchParams] = useSearchParams();
+    const planetIndex = parseInt(searchParams.get('planetIndex'), 10) || 1;
     const [isLoading, setIsLoading] = useState(true);
-    const [currentPlanetIndex, setCurrentPlanetIndex] = useState(0);
+    const [currentPlanetIndex, setCurrentPlanetIndex] = useState(planetIndex);
     const currentPlanet = planets[currentPlanetIndex];
     const [planetPosition, setPlanetPosition] = useState([0, 0, 0]);
 

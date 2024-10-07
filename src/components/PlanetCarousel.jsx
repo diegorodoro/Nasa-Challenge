@@ -252,7 +252,7 @@ const PlanetCarousel = () => {
 
   const handleDetailsClick = () => {
     console.log(`Traveling to ${planets[activePlanet].name}`);
-    navigate(`/about`);
+    navigate(`/about?planetIndex=${activePlanet}`);
 
   };
 
