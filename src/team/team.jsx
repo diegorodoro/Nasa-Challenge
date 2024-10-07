@@ -3,7 +3,12 @@ import Navbar from '../components/Navbar';  // Add this line
 import background from "../assets/images/background.jpg";
 import Footer from '../detailViewAlex/components/footer';  // Add this line
 import { motion } from 'framer-motion';
-
+import Inigo from '../assets/photos/inigo.jpg'
+import Diego from '../assets/photos/Diego.jpeg'
+import David from '../assets/photos/David.jpg'
+import Alex from '../assets/photos/Alex.jpeg'
+import Erick from '../assets/photos/Erick.jpeg'
+import JP from '../assets/photos/JosePablo.jpeg'
 
 const Team = () => {
      const teamMembers = [
@@ -11,37 +16,37 @@ const Team = () => {
                name: 'Iñigo Quintana Delgadillo',
                github: 'https://github.com/Inigo1405',
                linkedin: 'https://www.linkedin.com/in/inigo-quintana/',
-               imagen: '../src/team/photos/inigo.jpg',
+               imagen: Inigo,
           },
           {
                name: 'Diego Rodríguez Orozco',
                github: 'https://github.com/diegorodoro',
                linkedin: 'https://www.linkedin.com/in/diego-rodriguez-orozco/',
-               imagen: '../src/team/photos/Diego.jpeg',
+               imagen: Diego,
           },
           {
                name: 'David Bojalil Abiti',
                github: 'https://github.com/DavidBo9',
                linkedin: 'https://www.linkedin.com/in/david-bojalil-abiti-a90407284/',
-               imagen: '../src/team/photos/David.jpg',
+               imagen: David,
           },
           {
                name: 'Josua Alejandro Zamarrón Ramírez',
                github: 'https://github.com/RedGhost1505',
                linkedin: 'https://www.linkedin.com/in/alejandro-ram%C3%ADrez-a5b793192/',
-               imagen: '../src/team/photos/Alex.jpeg',
+               imagen: Alex,
           },
           {
                name: 'Erick Guevara Morales',
                github: 'https://github.com/ErickG09',
                linkedin: 'https://www.linkedin.com/in/erick-guevara-morales-b1b669331/',
-               imagen: '../src/team/photos/Erick.jpeg',
+               imagen: Erick,
           },
           {
                name: 'José Pablo Hernández Alonso',
                github: 'https://github.com/JPHAJP',
                linkedin: 'https://www.linkedin.com/in/jos%C3%A9-pablo-hern%C3%A1ndez-alonso-03a195256/',
-               imagen: '../src/team/photos/JosePablo.jpeg',
+               imagen: JP,
           }
      ];
 
