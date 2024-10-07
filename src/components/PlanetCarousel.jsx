@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
-import { Canvas, useFrame} from '@react-three/fiber';
+import { useNavigate } from 'react-router-dom';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, useFont } from '@react-three/drei';
 import * as THREE from 'three';
 import { Earth, Instances as EarthInstances } from './Earth';
@@ -15,7 +16,7 @@ import HeroCamera from './HeroCamera';
 import { useSpring, animated } from '@react-spring/three';
 import Navbar from './Navbar';  // Add this line
 import RadialMenu from './RadialMenu';  // Add this line
-import StarField from './StarField'; 
+import StarField from './StarField';
 import Loading2D from './Loading2D';
 import RocketLaunch from './RocketLaunch';
 
@@ -90,7 +91,7 @@ const Planet = ({ Component, Instances, scale, name, textSize, textRadius, color
         )}
       </group>
       <animated.group opacity={opacitySpring}>
-        <CurvedText 
+        <CurvedText
           text={name}
           radius={textRadius}
           size={textSize}
@@ -105,68 +106,68 @@ const Carousel = ({ activePlanet }) => {
   const lightRef = useRef();
 
   const planets = [
-    { 
-      component: Mercury, 
-      name: 'Mercury   Mercury   Mercury', 
+    {
+      component: Mercury,
+      name: 'Mercury   Mercury   Mercury',
       scale: 0.2,
       textSize: 30,
       textRadius: 75,
       color: '#9AD9B9'
     },
-    { 
-      component: Venus, 
-      name: 'Venus   Venus   Venus   Venus', 
+    {
+      component: Venus,
+      name: 'Venus   Venus   Venus   Venus',
       scale: 0.3,
       textSize: 25,
       textRadius: 70,
       color: '#e6a66f'
     },
-    { 
+    {
       component: Earth,
       instances: EarthInstances,
-      name: 'Earth   Earth   Earth   Earth', 
+      name: 'Earth   Earth   Earth   Earth',
       scale: 4.5,
       textSize: 2.5,
       textRadius: 6.5,
       color: '#6b93d6'
     },
-    { 
-      component: Mars, 
-      name: 'Mars   Mars   Mars   Mars', 
+    {
+      component: Mars,
+      name: 'Mars   Mars   Mars   Mars',
       scale: 10,
       textSize: 1.2,
       textRadius: 3,
       color: '#E75353'
     },
-    { 
-      component: Jupiter, 
-      name: 'Jupiter              Jupiter              Jupiter', 
+    {
+      component: Jupiter,
+      name: 'Jupiter              Jupiter              Jupiter',
       scale: 0.2,
       textSize: 65,
       textRadius: 155,
       color: '#e3a551'
     },
-    { 
-      component: Saturn, 
-      name: 'Saturn         Saturn', 
+    {
+      component: Saturn,
+      name: 'Saturn         Saturn',
       scale: 1,
       textSize: 10,
       textRadius: 20,
       color: '#FFA500',
       rotation: [0.4, 0, 0],
     },
-    { 
-      component: Uranus, 
-      name: 'Uranus             Uranus', 
+    {
+      component: Uranus,
+      name: 'Uranus             Uranus',
       scale: 0.035,
       textSize: 300,
       textRadius: 800,
       color: '#7FCFCF',
       rotation: [0.4, 0, 0],
     },
-    { 
-      component: Neptune, 
-      name: 'Neptune         Neptune', 
+    {
+      component: Neptune,
+      name: 'Neptune         Neptune',
       scale: 2,
       textSize: 6,
       textRadius: 15,
@@ -185,12 +186,12 @@ const Carousel = ({ activePlanet }) => {
         intensity={2}
         position={[50, 0, 0]}  // Positioned to the right
       />
-      
+
       {/* Ambient light for overall scene brightness */}
       <ambientLight intensity={0.3} />
 
       {planets.map((planet, index) => (
-        <Planet 
+        <Planet
           key={planet.name}
           Component={planet.component}
           Instances={planet.instances}
@@ -213,6 +214,7 @@ const PlanetCarousel = () => {
   const [showRadialMenu, setShowRadialMenu] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const totalPlanets = 8;
+  const navigate = useNavigate();
 
   const planets = [
     { name: 'Mercury' },
@@ -251,8 +253,8 @@ const PlanetCarousel = () => {
 
   const handleDetailsClick = () => {
     console.log(`Traveling to ${planets[activePlanet].name}`);
-    // Here you would typically navigate to the planet's page
-    // For example: history.push(`/planet/${planets[activePlanet].name.toLowerCase()}`);
+    navigate(`/about`);
+
   };
 
   if (isLoading) {
@@ -268,7 +270,7 @@ const PlanetCarousel = () => {
             <Carousel activePlanet={activePlanet} />
           </Suspense>
         </Canvas>
-        <RadialMenu 
+        <RadialMenu
           isVisible={showRadialMenu}
           planetName={planets[activePlanet].name}
           onDetailsClick={handleDetailsClick}

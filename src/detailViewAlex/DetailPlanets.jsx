@@ -54,7 +54,7 @@ function Planet({ planet, planetPosition }) {
     );
 }
 
-export default function MyApp() {
+export default function DetailView() {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPlanetIndex, setCurrentPlanetIndex] = useState(0);
     const currentPlanet = planets[currentPlanetIndex];
